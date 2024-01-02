@@ -40,19 +40,28 @@ import json
 import time
 from prettytable import PrettyTable
 
-with open("D:/backup data 2023/optional/belajar python/algo/sorting/data.json", "r") as f:
+with open("\\Users\\Lenovo\\Documents\\Algoritma Dasar\\Tugas AKhir\\2\\data.json", "r") as f:
     dataa = json.load(f)
 
 rating = [buku["rating"] for buku in dataa.values()]
 nama = [buku for buku in dataa.keys()]
+tutup = [buku["jam tutup"] for buku in dataa.values()]
 
 import datetime
 now = datetime.datetime.now().time()
 
+status_awal = []
 
 for restaurant, info in dataa.items():
     jam_buka = datetime.datetime.strptime(info["jam buka"], "%H:%M").replace(tzinfo=datetime.timezone.utc).time()
     jam_tutup = datetime.datetime.strptime(info["jam tutup"], "%H:%M").replace(tzinfo=datetime.timezone.utc).time()
+
+    if jam_buka <= now <= jam_tutup:
+        status = "buka"
+    else:
+        status = "tutup"
+
+    status_awal.append(status)
     
 
 data = list(dataa.items())
@@ -79,10 +88,10 @@ def insertion_sort(data):
 sorted_data = insertion_sort(data)
 
 print("\nWarung sebelum di sorting")
-tabel = list(zip(nama, rating))
+tabel = list(zip(nama, rating, status_awal, tutup))
 
 table1 = PrettyTable()
-table1.field_names = ["nama warung", "rating"]
+table1.field_names = ["nama warung", "rating", "status", "jam tutup"]
 for buku in tabel:
     table1.add_row(buku)
 print(table1)
@@ -101,5 +110,3 @@ for buku in sorted_data:
         status = "tutup"
     table.add_row([buku[0], buku[1]['rating'], status, buku[1]['jam tutup']] )
 print(table)
-
-
